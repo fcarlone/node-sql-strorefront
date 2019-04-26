@@ -95,13 +95,61 @@ const handleQuantityInput = (id, userQuantity) => {
     // Get product quantity
     const productQuantity = res[0].stock_quantity
     console.log('quantity', productQuantity)
-
+    // Get Unit Price
+    const productName = res[0].product_name;
+    const productPrice = res[0].price;
     if (userQuantity > productQuantity) {
       console.log('not enough product in stock')
     } else {
       console.log('approve purchase')
+      handleTransaction(id, productName, productPrice, productQuantity, userQuantity);
     }
-
-  })
-  connection.end()
+  });
 };
+
+const handleTransaction = (id, productName, productPrice, productQuantity, userQuantity) => {
+  console.log('handle Transaction function', id, productPrice, productQuantity, userQuantity);
+  // Calculate sale amount;
+  const saleAmount = (productPrice * userQuantity).toFixed(2);
+  console.log('sale amount', saleAmount)
+  console.log(`\nYour purchase of ${userQuantity} ${productName} at $${productPrice.toFixed(2)} per item total: $${saleAmount}\n`)
+  // connection.end();
+  handleUpdateInventory(id, productQuantity, userQuantity);
+};
+
+const handleUpdateInventory = (id, productQuantity, userQuantity) => {
+  const newQuantity = (productQuantity - userQuantity);
+
+  connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newQuantity }, { item_id: id }], function (err, res) {
+    // console.log("\n" + res.affectedRows + " product updated!\n");
+  });
+  handleCheckInventory()
+  handleExitStore();
+}
+
+const handleExitStore = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+        choices: ['Yes', 'No'],
+        name: 'continue',
+        message: 'Do you want to exit store'
+      }
+    ])
+    .then(answers => {
+      console.log(answers.continue);
+      if (answers.continue === 'Yes') {
+        console.log('Thank you for shopping!!!')
+        connection.end();
+      } else {
+        handleDisplayInventory();
+      }
+    });
+};
+
+const handleCheckInventory = () => {
+  connection.query("SELECT * FROM products", function (err, res) {
+    console.log('Updated Inventory', res)
+  })
+}

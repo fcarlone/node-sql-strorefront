@@ -1,5 +1,6 @@
-let mysql = require("mysql");
-let inquirer = require("inquirer");
+const mysql = require("mysql");
+const inquirer = require("inquirer");
+const colors = require('colors/safe');
 // let methods = require("./bamazonSQLQueries.js");
 
 let connection = mysql.createConnection({
@@ -99,7 +100,8 @@ const handleQuantityInput = (id, userQuantity) => {
     const productName = res[0].product_name;
     const productPrice = res[0].price;
     if (userQuantity > productQuantity) {
-      console.log('not enough product in stock')
+      console.log(colors.cyan.bold(`\nSorry.  Insufficient quantity!\nOnly ${productQuantity} ${productName} currently in stock\n`));
+      handleExitStore();
     } else {
       console.log('approve purchase')
       handleTransaction(id, productName, productPrice, productQuantity, userQuantity);
@@ -134,12 +136,12 @@ const handleExitStore = () => {
         type: 'list',
         choices: ['Yes', 'No'],
         name: 'continue',
-        message: 'Do you want to exit store'
+        message: 'Do you want to continue shopping?'
       }
     ])
     .then(answers => {
       console.log(answers.continue);
-      if (answers.continue === 'Yes') {
+      if (answers.continue === 'No') {
         console.log('Thank you for shopping!!!')
         connection.end();
       } else {

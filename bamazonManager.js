@@ -71,7 +71,53 @@ const displayAddInventory = () => {
       console.log(answers.productQuantity)
       methods.handleAddInventory(answers.productID, answers.productQuantity)
     })
+};
+
+const handleAddNewProduct = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "productName",
+        message: "Enter Product Name:"
+      },
+      {
+        type: "list",
+        choices: ["Electronics", "Clothing", "Households", "Grocery"],
+        name: "productDepartment",
+        message: "Enter Product Department:"
+      },
+      {
+        type: "input",
+        name: "productPrice",
+        message: "Enter Product Unit Price:"
+      }, {
+        type: "input",
+        name: "productQuantity",
+        message: "Enter Product Quantity:"
+      }
+    ])
+    .then(answers => {
+      const productName = answers.productName;
+      const productDepartment = answers.productDepartment;
+      const productPrice = answers.productPrice;
+      const productQuantity = answers.productQuantity;
+
+      methods.handleAddNewProductDatabase(productName, productDepartment, productPrice, productQuantity);
+      console.log("I'm back in bamzonManage JS");
+
+
+    });
+
 }
+
+
+
+
+
+
+
+
 // const handelInventoryList = () => {
 //   connection.query("SELECT * FROM products", function (err, res) {
 //     if (err) throw (err);

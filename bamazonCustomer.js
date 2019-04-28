@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const colors = require('colors/safe');
+const colors = require('colors');
 // let methods = require("./bamazonSQLQueries.js");
 
 let connection = mysql.createConnection({
@@ -13,15 +13,13 @@ let connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw (err);
-  console.log(`Connected as id ${connection.threadId}\n`)
   handleDisplayInventory();
 })
 
 const handleDisplayInventory = () => {
   connection.query("SELECT * FROM products", function (err, res) {
     if (err) throw (err);
-    console.log(`\nAvailable Inventory\n`)
-    // console.log(res);
+    console.log('\nAvailable Inventory\n'.bold.underline.cyan)
     res.forEach((product) => {
       console.log(`Product ID: ${product.item_id} || Product Name: ${product.product_name} || Price: $${product.price.toFixed(2)}`);
     })
@@ -43,14 +41,12 @@ const handleInquirer = () => {
       }
     ])
     .then(answers => {
-      console.log(answers.id)
       handleProductIdSearch(answers.id)
     });
 };
 
 const handleProductIdSearch = (id) => {
   connection.query("SELECT * FROM products WHERE item_id=?", [id], function (err, res) {
-    console.log(res)
     if (err) throw (err);
 
     if (res.length === 0) {
@@ -61,12 +57,10 @@ const handleProductIdSearch = (id) => {
       const productName = res[0].product_name;
       return handlePurchaseQuantity(id, productName)
     }
-
   })
 };
 
 const handlePurchaseQuantity = (id, productName) => {
-  console.log(`ask quantity for product id ${id, productName}`)
   console.log('\n');
   inquirer
     .prompt([
@@ -74,28 +68,18 @@ const handlePurchaseQuantity = (id, productName) => {
         type: 'input',
         name: 'quantity',
         message: `You selected ${productName}.\n Enter the quantity you want to purchase?`,
-        // validate: function (input) {
-        //   if (typeof input !== 'number') {
-        //     console.log('\nYou need to provide a number')
-        //        return
-        //   }
-        // }
       }
     ])
     .then(answers => {
-      console.log(answers.quantity)
       handleQuantityInput(id, answers.quantity);
     });
 };
 
 const handleQuantityInput = (id, userQuantity) => {
-  console.log('handle quantity function', id, userQuantity)
   connection.query("SELECT * FROM products WHERE item_id=?", [id], function (err, res) {
     if (err) throw (err);
-
     // Get product quantity
     const productQuantity = res[0].stock_quantity
-    console.log('quantity', productQuantity)
     // Get Unit Price
     const productName = res[0].product_name;
     const productPrice = res[0].price;
@@ -103,19 +87,16 @@ const handleQuantityInput = (id, userQuantity) => {
       console.log(colors.cyan.bold(`\nSorry.  Insufficient quantity!\nOnly ${productQuantity} ${productName} currently in stock\n`));
       handleExitStore();
     } else {
-      console.log('approve purchase')
+      console.log('\nPurchase Completed:\n'.bold.green)
       handleTransaction(id, productName, productPrice, productQuantity, userQuantity);
     }
   });
 };
 
 const handleTransaction = (id, productName, productPrice, productQuantity, userQuantity) => {
-  console.log('handle Transaction function', id, productPrice, productQuantity, userQuantity);
   // Calculate sale amount;
   const saleAmount = (productPrice * userQuantity).toFixed(2);
-  console.log('sale amount', saleAmount)
-  console.log(`\nYour purchase of ${userQuantity} ${productName} at $${productPrice.toFixed(2)} per item total: $${saleAmount}\n`)
-  // connection.end();
+  console.log(`Your purchase of ${userQuantity} ${productName} at $${productPrice.toFixed(2)} per item total: $${saleAmount}\n`.bold.green)
   handleUpdateInventory(id, productQuantity, userQuantity);
 };
 
@@ -123,7 +104,6 @@ const handleUpdateInventory = (id, productQuantity, userQuantity) => {
   const newQuantity = (productQuantity - userQuantity);
 
   connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newQuantity }, { item_id: id }], function (err, res) {
-    // console.log("\n" + res.affectedRows + " product updated!\n");
   });
   handleCheckInventory()
   handleExitStore();
@@ -142,7 +122,7 @@ const handleExitStore = () => {
     .then(answers => {
       console.log(answers.continue);
       if (answers.continue === 'No') {
-        console.log('Thank you for shopping!!!')
+        console.log('\nThank you for shopping!!!\n'.green.bold);
         connection.end();
       } else {
         handleDisplayInventory();
@@ -152,6 +132,6 @@ const handleExitStore = () => {
 
 const handleCheckInventory = () => {
   connection.query("SELECT * FROM products", function (err, res) {
-    console.log('Updated Inventory', res)
+    // console.log('Updated Inventory', res)
   })
-}
+};

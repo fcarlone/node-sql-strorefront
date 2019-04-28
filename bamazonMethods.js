@@ -24,9 +24,11 @@ const handelInventoryList = () => {
     // console.log(res);
     res.forEach((product) => {
       console.log(`Product ID: ${product.item_id}  ||  Product Name: ${product.product_name}  ||  Price: $${product.price.toFixed(2)}  ||  Quantity: ${product.stock_quantity}`);
-
     })
+
   })
+
+  // connection.end()
 };
 
 const handleLowInventory = () => {
@@ -73,15 +75,22 @@ const handleAddNewProductDatabase = (name, department, price, quantity) => {
     },
     function (err, res) {
       console.log(res.affectedRows + " product inserted!\n");
-      handelInventoryList();
-
+      // handelInventoryList();
+      // handleEndConnection();
     });
 }
+
+const handleEndConnection = () => {
+  // console.log('connection ended')
+  connection.end()
+}
+
 
 // Export functions
 module.exports = {
   handelInventoryList: handelInventoryList,
   handleLowInventory: handleLowInventory,
   handleAddInventory: handleAddInventory,
-  handleAddNewProductDatabase: handleAddNewProductDatabase
+  handleAddNewProductDatabase: handleAddNewProductDatabase,
+  handleEndConnection: handleEndConnection
 };

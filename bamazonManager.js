@@ -1,7 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require('inquirer');
 const colors = require('colors');
-// const methods = require("./bamazonMethods.js");
 
 // Connnect to database
 const connection = mysql.createConnection({
@@ -14,12 +13,11 @@ const connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw (err);
-  console.log(`bamazonManger file Connected as id ${connection.threadId}\n`)
   managerMenu();
-  // connection.end()
 });
 
 const managerMenu = () => {
+  console.log('\n')
   inquirer
     .prompt([
       {
@@ -38,9 +36,9 @@ const managerMenu = () => {
 const handleManagerOption = (input) => {
   switch (input) {
     case 'View Products for Sale':
-      return methods.handelInventoryList();
+      return handleInventoryList();
     case 'View Low Inventory':
-      return methods.handleLowInventory();
+      return handleLowInventory();
     case 'Add to Inventory':
       return displayAddInventory();
     case 'Add New Product':
@@ -52,10 +50,35 @@ const handleManagerOption = (input) => {
   };
 };
 
+// Handle menu option 1
+const handleInventoryList = () => {
+  connection.query("SELECT * FROM products", function (err, res) {
+    if (err) throw (err);
+    console.log('\nAvailable Inventory\n'.bold.underline.cyan)
+    res.forEach((product) => {
+      console.log(`Product ID: ${product.item_id}  ||  Product Name: ${product.product_name}  ||  Price: $${product.price.toFixed(2)}  ||  Quantity: ${product.stock_quantity}`);
+    })
+    console.log('\n')
+    managerMenu();
+  })
+};
 
+// handle menu option 2
+const handleLowInventory = () => {
+  connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, res) {
+    if (err) throw (err);
+    console.log(`\nList of products with quantity less than five\n`.cyan.bold.underline);
+    res.forEach((product) => {
+      console.log(`Product ID: ${product.item_id}  ||  Product Name: ${product.product_name}  ||  Price: $${product.price.toFixed(2)}  ||  Quantity: ${product.stock_quantity}`);
+    })
+    console.log('\n')
+    managerMenu();
+  })
+};
+
+// handle menu option 3
 const displayAddInventory = () => {
-  console.log('invoke handle add inventory')
-  // methods.handelInventoryList()
+  console.log('\n')
   inquirer
     .prompt([
       {
@@ -77,25 +100,22 @@ const displayAddInventory = () => {
 };
 
 const handleAddInventory = (id, quantity) => {
-  console.log('invoke handle low inventory', id, quantity)
   // Get the product to increase the quantity
   connection.query("SELECT * FROM products WHERE item_id=?", [id], function (err, res) {
-    console.log(res);
     // Get item current stock quantity
     const currentQuantity = res[0].stock_quantity;
     // Calculate new stock quantity
     const updateQuantity = parseInt(currentQuantity) + parseInt(quantity);
-    console.log('updated quantity', updateQuantity);
-
     // Update database stock quantity
     connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: updateQuantity }, { item_id: id }], function (err, res) {
-      console.log('stock been updated')
-      handelInventoryList();
-      // connection.end();
+      if (err) throw (err);
+      handleInventoryList();
+      console.log('\nProduct inventory has been updated.\n'.bold.underline.cyan)
     });
   })
 };
 
+// Handle menu option 4
 const handleAddNewProduct = () => {
   inquirer
     .prompt([
@@ -126,51 +146,28 @@ const handleAddNewProduct = () => {
       const productPrice = answers.productPrice;
       const productQuantity = answers.productQuantity;
 
-      methods.handleAddNewProductDatabase(productName, productDepartment, productPrice, productQuantity);
-      console.log("I'm back in bamzonManage JS");
-
-      const handleMenu = () => {
-        setTimeout(() => {
-          managerMenu();
-        }, 1500)
-      }
-      handleMenu();
+      handleAddNewProductDatabase(productName, productDepartment, productPrice, productQuantity);
     });
-}
-
-
-
-
-
-const handelInventoryList = () => {
-  connection.query("SELECT * FROM products", function (err, res) {
-    if (err) throw (err);
-    console.log(`\nAvailable Inventory\n`)
-    // console.log(res);
-    res.forEach((product) => {
-      console.log(`Product ID: ${product.item_id}  ||  Product Name: ${product.product_name}  ||  Price: $${product.price.toFixed(2)}  ||  Quantity: ${product.stock_quantity}`);
-    })
-    console.log('\nProduct inventory been updated.\n'.bold.underline.cyan)
-    managerMenu();
-  })
-
 };
 
+const handleAddNewProductDatabase = (name, department, price, quantity) => {
+  console.log(name, department, price, quantity)
+  connection.query("INSERT INTO products SET ?",
+    {
+      product_name: name,
+      department_name: department,
+      price: price,
+      stock_quantity: quantity
+    },
+    function (err, res) {
+      console.log(`\n${res.affectedRows} product added:`.bold.underline.cyan);
+      console.log(`Product name: ${name} || Deparment: ${department} || Price: ${price} || Quantity: ${quantity}\n`.bold.underline.cyan)
+    });
+  handleInventoryList();
+};
 
-// const handelInventoryList = () => {
-//   connection.query("SELECT * FROM products", function (err, res) {
-//     if (err) throw (err);
-//     console.log(`\nAvailable Inventory\n`)
-//     // console.log(res);
-//     res.forEach((product) => {
-//       console.log(`Product ID: ${product.item_id}  ||  Product Name: ${product.product_name}  ||  Price: $${product.price.toFixed(2)}`);
-//     })
-
-//   })
-// }
-
-
+// Handle menu option 5
 const handleMenuExit = () => {
-  console.log('\nExited Manger Menu\n'.bold.underline.cyan)
+  console.log('\nExited Manager Menu\n'.bold.underline.red)
   connection.end();
-}
+};

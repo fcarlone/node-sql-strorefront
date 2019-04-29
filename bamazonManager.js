@@ -117,6 +117,15 @@ const handleAddInventory = (id, quantity) => {
 
 // Handle menu option 4
 const handleAddNewProduct = () => {
+  let departmentList = [];
+  // Get list of departments from departments table
+  connection.query("SELECT department_name FROM departments", function (err, res) {
+    if (err) throw (err);
+    res.forEach((department) => {
+      departmentList.push(department.department_name)
+    })
+  });
+
   inquirer
     .prompt([
       {
@@ -126,7 +135,7 @@ const handleAddNewProduct = () => {
       },
       {
         type: "list",
-        choices: ["Electronics", "Clothing", "Households", "Grocery"],
+        choices: departmentList,
         name: "productDepartment",
         message: "Enter Product Department:"
       },
@@ -171,3 +180,5 @@ const handleMenuExit = () => {
   console.log('\nExited Manager Menu\n'.bold.underline.red)
   connection.end();
 };
+
+

@@ -13,7 +13,7 @@ CREATE TABLE products
   department_name VARCHAR(50) NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   stock_quantity INTEGER NOT NULL,
-  product_sales DECIMAL(10,2) DEFAULT 0,
+  product_sales DECIMAL(10,2) DEFAULT 0.00,
   PRIMARY KEY(item_id)
 );
 
@@ -61,3 +61,10 @@ ON products.department_name = departments.department_name
 GROUP BY products.department_name, departments.department_id
 ORDER BY departments.department_id;
 
+
+SELECT departments.department_id, departments.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (departments.over_head_costs - SUM(products.product_sales)) AS total_profit
+FROM products 
+RIGHT JOIN departments
+ON products.department_name = departments.department_name
+GROUP BY products.department_name, departments.department_id
+ORDER BY departments.department_id;

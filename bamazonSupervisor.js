@@ -1,5 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require('inquirer');
+const colors = require('colors');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -7,7 +9,7 @@ const connection = mysql.createConnection({
   user: "root",
   password: "Fodder165*",
   database: "inventory_db"
-})
+});
 
 connection.connect(function (err) {
   if (err) throw (err);
@@ -45,14 +47,45 @@ const handleSupervisorOption = (input) => {
 };
 
 const displayProductSales = () => {
-  console.log('invoke display product sales');
-
-  connection.query("SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (departments.over_head_costs - SUM(products.product_sales)) AS total_profit FROM products LEFT JOIN departments ON products.department_name = departments.department_name GROUP BY products.department_name, departments.department_id ORDER BY departments.department_id",
+  connection.query("SELECT departments.department_id, departments.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (departments.over_head_costs - SUM(products.product_sales)) AS total_profit FROM products RIGHT JOIN departments ON products.department_name = departments.department_name GROUP BY products.department_name, departments.department_id ORDER BY departments.department_id",
     function (err, res) {
-      console.log('\ndisplay products sales', res)
-
+      if (err) throw (err);
+      console.log(`\nList of bamazon departments:\n`.bold.underline.cyan)
+      console.table(res)
+      supervisorMenu();
     })
 };
 
+const handleAddNewDepartment = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'departmentName',
+        message: 'Enter name of new department'
+      },
+      {
+        type: 'input',
+        name: 'departmentCosts',
+        message: 'Enter department over-head costs'
+      }
+    ])
+    .then(answers => {
+      console.log(answers.departmentName);
+      console.log(answers.departmentCosts)
+      connection.query("INSERT INTO departments SET ?", {
+        department_name: answers.departmentName,
+        over_head_costs: answers.departmentCosts
+      }, function (err, res) {
+        if (err) throw (err);
+        console.log(`\n${res.affectedRows} new department added\n`.bold.underline.cyan);
+        supervisorMenu();
+      })
+    });
+};
 
+const handleMenuExit = () => {
+  console.log('\nExited Supervisor Menu\n'.bold.underline.red)
+  connection.end();
+};
 

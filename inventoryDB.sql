@@ -20,15 +20,15 @@ CREATE TABLE products
 -- Supervisor view table --
 CREATE TABLE departments
 (
-  department_id INTEGER NOT NULL AUTO_INCREMENT,
+  department_id INTEGER(2) NOT NULL AUTO_INCREMENT,
   department_name VARCHAR(50) NOT NULL,
   over_head_costs DECIMAL(10,0) NOT NULL,
   PRIMARY KEY(department_id)
 );
 ALTER TABLE departments AUTO_INCREMENT = 01;
 
--- Insert seed data --
-INSERT INto products (product_name, department_name, price, stock_quantity)
+-- Insert seed data for products --
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("HDTV","Electronics",599.99,5),
 ("socks","Clothing",4.50,20),
 ("clock radio","Electronics",25.14,3),
@@ -40,4 +40,24 @@ VALUES ("HDTV","Electronics",599.99,5),
 ("banana","Grocery",0.25,10),
 ("apples","Grocery",1.00,5);
 
+-- Insert seed data for departments --
+INSERT INTO departments (department_name, over_head_costs)
+VALUES("Electronics", 7500),
+("Clothing", 5000),
+("Households", 2000),
+("Grocery", 6000);
+
+
 SELECT * FROM products;
+SELECT * FROM departments;
+
+SELECT department_name, SUM(product_sales) FROM products GROUP BY department_name;
+
+
+SELECT departments.department_id, products.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (departments.over_head_costs - SUM(products.product_sales)) AS total_profit
+FROM products 
+LEFT JOIN departments
+ON products.department_name = departments.department_name
+GROUP BY products.department_name, departments.department_id
+ORDER BY departments.department_id;
+

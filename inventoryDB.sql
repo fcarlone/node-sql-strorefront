@@ -13,7 +13,7 @@ CREATE TABLE products
   department_name VARCHAR(50) NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   stock_quantity INTEGER NOT NULL,
-  product_sales DECIMAL(10,2),
+  product_sales DECIMAL(10,2) DEFAULT 0,
   PRIMARY KEY(item_id)
 );
 
@@ -30,7 +30,7 @@ ALTER TABLE departments AUTO_INCREMENT = 01;
 -- Insert seed data --
 INSERT INto products (product_name, department_name, price, stock_quantity)
 VALUES ("HDTV","Electronics",599.99,5),
-("socks","Clothing",4.50,10),
+("socks","Clothing",4.50,20),
 ("clock radio","Electronics",25.14,3),
 ("frying pan","Households",17.99,2),
 ("dish detergent","Households",7.15,6),
@@ -40,4 +40,4 @@ VALUES ("HDTV","Electronics",599.99,5),
 ("banana","Grocery",0.25,10),
 ("apples","Grocery",1.00,5);
 
-select * from products;
+SELECT * FROM products;

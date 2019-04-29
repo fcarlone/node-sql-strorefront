@@ -80,34 +80,36 @@ const handleQuantityInput = (id, userQuantity) => {
     if (err) throw (err);
     // Get product quantity
     const productQuantity = res[0].stock_quantity
-    // Get Unit Price
+    // Get unit price
     const productName = res[0].product_name;
     const productPrice = res[0].price;
+    // Get product salse
+    const productSales = res[0].product_sales;
     if (userQuantity > productQuantity) {
       console.log(colors.cyan.bold(`\nSorry.  Insufficient quantity!\nOnly ${productQuantity} ${productName} currently in stock\n`));
       handleExitStore();
     } else {
       console.log('\nPurchase Completed:\n'.bold.green)
-      handleTransaction(id, productName, productPrice, productQuantity, userQuantity);
+      handleTransaction(id, productName, productPrice, productQuantity, userQuantity, productSales);
     }
   });
 };
 
-const handleTransaction = (id, productName, productPrice, productQuantity, userQuantity) => {
+const handleTransaction = (id, productName, productPrice, productQuantity, userQuantity, productSales) => {
   // Calculate sale amount;
   const saleAmount = (productPrice * userQuantity).toFixed(2);
   console.log(`Your purchase of ${userQuantity} ${productName} at $${productPrice.toFixed(2)} per item total: $${saleAmount}\n`.bold.green);
   // Update Inventory
   handleUpdateInventory(id, productQuantity, userQuantity);
   // Calculate product_sales column
-  handleProductSalesColumn(id, saleAmount);
+  handleProductSalesColumn(id, saleAmount, productSales);
 };
 
 const handleUpdateInventory = (id, productQuantity, userQuantity) => {
   const newQuantity = (productQuantity - userQuantity);
   connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newQuantity }, { item_id: id }], function (err, res) {
   });
-  handleCheckInventory()
+  // handleCheckInventory()
   handleExitStore();
 }
 
@@ -134,6 +136,18 @@ const handleExitStore = () => {
 
 const handleCheckInventory = () => {
   connection.query("SELECT * FROM products", function (err, res) {
-    // console.log('Updated Inventory', res)
+    console.log('Updated Inventory', res)
+  })
+};
+
+const handleProductSalesColumn = (id, saleAmount, productSales) => {
+  saleAmount = parseFloat(saleAmount)
+  // console.log('sale amount', typeof (saleAmount), saleAmount)
+  // console.log('product sales', typeof (productSales), productSales)
+  updatedProductSales = (saleAmount + productSales).toFixed(2)
+  // console.log('updated prodect sales', updatedProductSales)
+
+  connection.query("UPDATE products SET ? WHERE ?", [{ product_sales: updatedProductSales }, { item_id: id }], function (err, res) {
+    // handleCheckInventory();
   })
 };

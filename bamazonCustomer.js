@@ -134,6 +134,7 @@ const handleExitStore = () => {
     });
 };
 
+// For test purpose only
 const handleCheckInventory = () => {
   connection.query("SELECT * FROM products", function (err, res) {
     console.log('Updated Inventory', res)
@@ -142,12 +143,7 @@ const handleCheckInventory = () => {
 
 const handleProductSalesColumn = (id, saleAmount, productSales) => {
   saleAmount = parseFloat(saleAmount)
-  // console.log('sale amount', typeof (saleAmount), saleAmount)
-  // console.log('product sales', typeof (productSales), productSales)
   updatedProductSales = (saleAmount + productSales).toFixed(2)
-  // console.log('updated prodect sales', updatedProductSales)
-
   connection.query("UPDATE products SET ? WHERE ?", [{ product_sales: updatedProductSales }, { item_id: id }], function (err, res) {
-    // handleCheckInventory();
   })
 };

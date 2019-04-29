@@ -24,7 +24,7 @@ const supervisorMenu = () => {
         type: 'list',
         choices: ["View Product Sales by Department", "Create New Department", "Exit Menu"],
         name: 'supervisorSelection',
-        messages: "Select a command"
+        message: "Select a command"
       }
     ])
     .then(answers => {
@@ -33,6 +33,7 @@ const supervisorMenu = () => {
     });
 };
 
+// Switch statment base on supervisor choice
 const handleSupervisorOption = (input) => {
   switch (input) {
     case 'View Product Sales by Department':
@@ -46,6 +47,7 @@ const handleSupervisorOption = (input) => {
   }
 };
 
+// Handle menu option 1
 const displayProductSales = () => {
   connection.query("SELECT departments.department_id, departments.department_name, departments.over_head_costs, SUM(products.product_sales) AS product_sales, (SUM(products.product_sales) - departments.over_head_costs) AS total_profit FROM products RIGHT JOIN departments ON products.department_name = departments.department_name GROUP BY products.department_name, departments.department_id ORDER BY departments.department_id",
     function (err, res) {
@@ -56,6 +58,7 @@ const displayProductSales = () => {
     })
 };
 
+// Handle menu option 2
 const handleAddNewDepartment = () => {
   inquirer
     .prompt([
@@ -84,6 +87,7 @@ const handleAddNewDepartment = () => {
     });
 };
 
+// Handle menu option 3
 const handleMenuExit = () => {
   console.log('\nExited Supervisor Menu\n'.bold.underline.red)
   connection.end();

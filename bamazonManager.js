@@ -117,8 +117,8 @@ const handleAddInventory = (id, quantity) => {
 
 // Handle menu option 4
 const handleAddNewProduct = () => {
-  let departmentList = [];
   // Get list of departments from departments table
+  let departmentList = [];
   connection.query("SELECT department_name FROM departments", function (err, res) {
     if (err) throw (err);
     res.forEach((department) => {

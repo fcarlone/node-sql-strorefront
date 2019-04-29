@@ -96,13 +96,15 @@ const handleQuantityInput = (id, userQuantity) => {
 const handleTransaction = (id, productName, productPrice, productQuantity, userQuantity) => {
   // Calculate sale amount;
   const saleAmount = (productPrice * userQuantity).toFixed(2);
-  console.log(`Your purchase of ${userQuantity} ${productName} at $${productPrice.toFixed(2)} per item total: $${saleAmount}\n`.bold.green)
+  console.log(`Your purchase of ${userQuantity} ${productName} at $${productPrice.toFixed(2)} per item total: $${saleAmount}\n`.bold.green);
+  // Update Inventory
   handleUpdateInventory(id, productQuantity, userQuantity);
+  // Calculate product_sales column
+  handleProductSalesColumn(id, saleAmount);
 };
 
 const handleUpdateInventory = (id, productQuantity, userQuantity) => {
   const newQuantity = (productQuantity - userQuantity);
-
   connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newQuantity }, { item_id: id }], function (err, res) {
   });
   handleCheckInventory()

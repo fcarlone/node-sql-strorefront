@@ -5,6 +5,14 @@
 * The Supervisor view will display a summarized table of profits by department and the ability to create a new department.
 
 
+#### Software/libraries used for this application:
+JavaScript - for the applications logic  
+Node.js - to execute the application in the terminal (outside the browser)  
+mysql - Node.js driver for mysql  
+Inquirer.js - command-line user interface to prompt for and handle user input  
+colors.js - to style the Node.js application in the console  
+
+
 ### Install Node SQL Storefront: 
 1. Open a terminal 
 2. Clone the node-sql-storefront repository  

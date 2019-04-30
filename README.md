@@ -1,7 +1,7 @@
 # Node SQL Storefront
 #### This application has three views: Customer, Manager and Supervisor
 * The Customer view will take in orders from customers and deplete stock from the store's inventory.  
-* The Manager view will list products for sale, list products with quantity below five, add to quantity of an existing product and add a new prodct.  
+* The Manager view will list products for sale, list products with quantity below five, add to quantity of an existing product and add a new product.  
 * The Supervisor view will display a summarized table of profits by department and the ability to create a new department.
 
 
@@ -16,13 +16,13 @@
 In the terminal type the following command to start the Customer view:  
 `node bamazonCustomer.js`
 
-- View a list of products avaiable for sale
+- View a list of products available for sale
 - Enter the Product ID number of the item you want to purchase
 - Then enter the quantity you want to purchase
-  - You are notified if the quantity you enter is greater than what is currently in stock
-- You are notifed when the purchase is completed and given the sales total
+  - The customer is notified if the quantity you enter is greater than what is currently in stock
+-  The customer is notified when the purchase is completed and given the sales total
 
-See Customer View Demo below to see a video demostration
+See Customer View Demo below to see a video demonstration
 
 ### Manager View Instructions:  
 In the terminal type the following command to start the Manager view:  
@@ -37,22 +37,22 @@ Manager view has the option to:
 
 `View Products for Sale` displays a full inventory list  
 
-`View Low Inventory` displays a inventory list for products with stock quantity less than five  
+`View Low Inventory` displays an inventory list for products with stock quantity less than five  
 
-Insturctions for `Add to Inventory` menu option:
+Instructions for `Add to Inventory` menu option:
 - Enter a Product ID number for the item you want to add quantity
 - Then enter the quantity 
 
-Insturctions for `Add New Product` menu option:
+Instructions for `Add New Product` menu option:
 - Enter the product name you want to add
 - Choice a department name the new product pertain to
 - Enter the product's unit price
 - Enter the product's quantity
 
-See Manager View Demo below to see a video demostration
+See Manager View Demo below to see a video demonstration
 
 
-### Superisor View Instructions:  
+### Supervisor View Instructions:  
 In the terminal type the following command to start the Manager view:  
 `node bamazonSupervisor.js` 
 
@@ -63,8 +63,8 @@ Supervisor view has the option to:
 
 `View Product Sales by Department` will display a summarized table of profits by department
 
-Insturctions for `Create New Department` menu option:
+Instructions for `Create New Department` menu option:
 - Enter the name of the new department
 - Enter the amount of the over-head costs
 
-See Supervisor View Demo below to see a video demostration
+See Supervisor View Demo below to see a video demonstration

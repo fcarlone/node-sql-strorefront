@@ -68,3 +68,16 @@ Instructions for `Create New Department` menu option:
 - Enter the amount of the over-head costs
 
 See Supervisor View Demo below to see a video demonstration
+
+
+### Video Demonstrations:
+
+#### Customer View Video
+[![Watch the video](assets/ss-customer.png)](https://drive.google.com/open?id=1QujFkEQ8M6AHVEbMGcIs3CY8XZakUwHX)  
+
+#### Manager View Video   
+[![Watch the video](assets/ss-manager.png)](https://drive.google.com/open?id=117x7Qy52tWCNgD-Ad0FLbY5BWJNtO41U)  
+
+
+#### Supervisor View Video  
+[![Watch the video](assets/ss-supervisor.png)](https://drive.google.com/open?id=1nCOI1DEi_7lYrNlxcJfB3bG3_YnS0I8N)  

@@ -85,18 +85,39 @@ const displayAddInventory = () => {
         type: 'input',
         name: 'productID',
         message: 'Select a product ID number',
+        validate: function (value) {
+          let valid = !isNaN(parseFloat(value));
+          return valid || "Please enter a number".red.bold;
+        }
       },
       {
         type: 'input',
         name: 'productQuantity',
-        message: "Enter Quantity"
+        message: "Enter Quantity",
+        validate: function (value) {
+          let valid = !isNaN(parseFloat(value));
+          return valid || "Please enter a number".red.bold;
+        }
       }
     ])
     .then(answers => {
-      console.log(answers.productID)
-      console.log(answers.productQuantity)
-      handleAddInventory(answers.productID, answers.productQuantity)
-    })
+      handleProductIdSearch(answers.productID, answers.productQuantity)
+    });
+};
+
+const handleProductIdSearch = (id, quantity) => {
+  connection.query("SELECT * FROM products WHERE item_id=?", [id], function (err, res) {
+    if (err) throw (err);
+
+    if (res.length === 0) {
+      console.log(`Product ID: ${id} does not exists.  Please select a different Product ID.`.bold.cyan.underline);
+      // Rerun inquirer to select product id and quantity question
+      return displayAddInventory()
+    } else {
+      // const productName = res[0].product_name;
+      return handleAddInventory(id, quantity)
+    }
+  })
 };
 
 const handleAddInventory = (id, quantity) => {
@@ -142,11 +163,21 @@ const handleAddNewProduct = () => {
       {
         type: "input",
         name: "productPrice",
-        message: "Enter Product Unit Price:"
-      }, {
+        message: "Enter Product Unit Price:",
+        validate: function (value) {
+          let valid = !isNaN(parseFloat(value));
+          return valid || "Please enter a price".red.bold;
+        }
+      },
+      {
         type: "input",
         name: "productQuantity",
-        message: "Enter Product Quantity:"
+        message: "Enter Product Quantity:",
+        validate: function (value) {
+          let valid = Number.isInteger(value);
+          return valid || "Please enter a quantity".red.bold;
+        },
+        filter: Number
       }
     ])
     .then(answers => {

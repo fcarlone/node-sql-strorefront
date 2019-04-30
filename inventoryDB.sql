@@ -22,7 +22,7 @@ CREATE TABLE departments
 (
   department_id INTEGER(2) NOT NULL AUTO_INCREMENT,
   department_name VARCHAR(50) NOT NULL,
-  over_head_costs DECIMAL(10,0) NOT NULL,
+  over_head_costs DECIMAL(10,2) NOT NULL,
   PRIMARY KEY(department_id)
 );
 ALTER TABLE departments AUTO_INCREMENT = 01;

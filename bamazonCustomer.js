@@ -50,7 +50,7 @@ const handleProductIdSearch = (id) => {
     if (err) throw (err);
 
     if (res.length === 0) {
-      console.log(`Product ID: ${id} does not exists.  Please select a different Product ID.`);
+      console.log(`Product ID: ${id} does not exists.  Please select a different Product ID.`.bold.cyan.underline);
       // Rerun inventory list and prompt select product id question
       return handleDisplayInventory()
     } else {
@@ -68,6 +68,10 @@ const handlePurchaseQuantity = (id, productName) => {
         type: 'input',
         name: 'quantity',
         message: `You selected ${productName}.\n Enter the quantity you want to purchase?`,
+        validate: function (value) {
+          let valid = !isNaN(parseFloat(value));
+          return valid || "Please enter a number".red.bold;
+        }
       }
     ])
     .then(answers => {

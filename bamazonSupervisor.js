@@ -70,18 +70,21 @@ const handleAddNewDepartment = () => {
       {
         type: 'input',
         name: 'departmentCosts',
-        message: 'Enter department over-head costs'
+        message: 'Enter department over-head costs',
+        validate: function (value) {
+          let valid = !isNaN(parseFloat(value));
+          return valid || "Please enter a number".red.bold;
+        },
+        filter: Number
       }
     ])
     .then(answers => {
-      console.log(answers.departmentName);
-      console.log(answers.departmentCosts)
       connection.query("INSERT INTO departments SET ?", {
         department_name: answers.departmentName,
         over_head_costs: answers.departmentCosts
       }, function (err, res) {
         if (err) throw (err);
-        console.log(`\n${res.affectedRows} new department added\n`.bold.underline.cyan);
+        console.log(`\n${res.affectedRows} new department added: ${answers.departmentName}\n`.bold.underline.cyan);
         supervisorMenu();
       })
     });

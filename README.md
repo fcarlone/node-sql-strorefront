@@ -1,4 +1,7 @@
 # Node SQL Storefront
+
+## This application records product inventory in a SQL database and prompts the user based on view selected.
+
 #### This application has three views: Customer, Manager and Supervisor
 * The Customer view will take in orders from customers and deplete stock from the store's inventory.  
 * The Manager view will list products for sale, list products with quantity below five, add to quantity of an existing product and add a new product.  
@@ -18,12 +21,12 @@ colors.js - to style the Node.js application in the console
 2. Clone the node-sql-storefront repository  
 3. Install the packages associated with this application  
 `npm install`  
-4. Enter the file name associated with the view type (see View Instructions for file name)  
+4. Enter the file name associated with the view type (see view type for file name)  
 
 ### Customer View Instructions:  
 In the terminal type the following command to start the Customer view:  
-`node bamazonCustomer.js`
-
+`node bamazonCustomer.js`  
+The customer can:  
 - View a list of products available for sale
 - Enter the Product ID number of the item you want to purchase
 - Then enter the quantity you want to purchase

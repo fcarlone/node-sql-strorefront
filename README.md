@@ -26,6 +26,7 @@ colors.js - to style the Node.js application in the console
 ### Customer View Instructions:  
 In the terminal type the following command to start the Customer view:  
 `node bamazonCustomer.js`  
+
 The customer can:  
 - View a list of products available for sale
 - Enter the Product ID number of the item you want to purchase

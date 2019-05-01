@@ -40,7 +40,12 @@ const handleManagerOption = (input) => {
     case 'View Low Inventory':
       return handleLowInventory();
     case 'Add to Inventory':
-      return displayAddInventory();
+      // return displayAddInventory();
+      // Run Promise 
+      return handlePromise().then(() => {
+        // console.log('then promise')
+        displayAddInventory();
+      });
     case 'Add New Product':
       return handleAddNewProduct();
     case 'Exit Menu':
@@ -59,7 +64,7 @@ const handleInventoryList = () => {
       console.log(`Product ID: ${product.item_id}  ||  Product Name: ${product.product_name}  ||  Price: $${product.price.toFixed(2)}  ||  Quantity: ${product.stock_quantity}`);
     })
     console.log('\n')
-    managerMenu();
+    // managerMenu();
   })
 };
 
@@ -77,6 +82,21 @@ const handleLowInventory = () => {
 };
 
 // handle menu option 3
+// Add Promise
+const handlePromise = async () => {
+  console.log('\n')
+
+  return new Promise(resolve => {
+    displayAddInventory()
+    console.log('new promise')
+    // let list = displayAddInventory();
+
+    // console.log('list')
+    // resolve(list);
+  });
+};
+
+// Prompt add inventory questions
 const displayAddInventory = () => {
   console.log('\n')
   inquirer

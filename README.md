@@ -9,7 +9,7 @@
 
 
 #### Software/libraries used for this application:
-JavaScript - for the applications logic  
+JavaScript - for application logic  
 Node.js - to execute the application in the terminal (outside the browser)  
 mysql - Node.js driver for mysql  
 Inquirer.js - command-line user interface to prompt for and handle user input  
